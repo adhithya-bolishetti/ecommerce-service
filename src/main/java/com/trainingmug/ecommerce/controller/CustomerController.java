@@ -1,8 +1,6 @@
 package com.trainingmug.ecommerce.controller;
 
-import com.trainingmug.ecommerce.exception.CustomerExistsException;
-import com.trainingmug.ecommerce.exception.CustomerNotFoundException;
-import com.trainingmug.ecommerce.model.Customer;
+import com.trainingmug.ecommerce.entity.Customer;
 import com.trainingmug.ecommerce.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,17 +19,13 @@ public class CustomerController {
     //CRUD operations (End Points)
     //Save ( POST -> body)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> save(@RequestBody Customer customer) {
         //1. Throw CustomerExistsException if customer exists
         //2. save customer
         //3. return saved customer
-        try {
+
             return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customer));
-        } catch (CustomerExistsException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+
         //ResponseEntity Types
         /*
         201 Created -> ResponseEntity<Customer>
@@ -48,36 +42,19 @@ public class CustomerController {
     }
     //http://localhost:8080/api/customers/1
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable int id){
-        try {
+    public ResponseEntity<Customer> getById(@PathVariable int id){
             return ResponseEntity.ok(customerService.getById(id));
-        } catch(CustomerNotFoundException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch(Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
     }
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Customer customer){
-        try {
+    public ResponseEntity<Customer> update(@RequestBody Customer customer){
             return ResponseEntity.ok(customerService.update(customer));
-        } catch(CustomerNotFoundException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch(Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable int id){
-        try {
+    public ResponseEntity<Void> delete(@PathVariable int id){
             customerService.delete(id);
             return ResponseEntity.noContent().build();
-        } catch(CustomerNotFoundException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch(Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
     }
 
     /*
