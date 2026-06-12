@@ -1,6 +1,7 @@
 package com.trainingmug.ecommerce.service.impl;
 
 import com.trainingmug.ecommerce.entity.Product;
+import com.trainingmug.ecommerce.exception.ProductExistsException;
 import com.trainingmug.ecommerce.exception.ProductNotFoundException;
 import com.trainingmug.ecommerce.repository.ProductRepository;
 import com.trainingmug.ecommerce.service.ProductService;
@@ -17,6 +18,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+
+    @Override
+    public Product save(Product product) throws ProductExistsException {
+        productRepository.findById(product.getId()).ifPresent(p -> {
+            throw new ProductExistsException("Customer exits this with id: " + product.getId());
+        });
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product update(Product product) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Product getById(String id) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return List.of();
+    }
+
+    @Override
+    public void delete() throws ProductNotFoundException {
+
+    }
 
     @Override
     public List<Product> getProductsByAvailability(boolean isAvailable) {
