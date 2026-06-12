@@ -1,6 +1,7 @@
 package com.trainingmug.ecommerce.service;
 
 import com.trainingmug.ecommerce.entity.Product;
+import com.trainingmug.ecommerce.exception.ProductExistsException;
 import com.trainingmug.ecommerce.exception.ProductNotFoundException;
 
 import java.util.List;
@@ -8,6 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ProductService {
+    Product save(Product product) throws ProductExistsException;
+    Product update(Product product) throws ProductNotFoundException;
+    Product getById(String id) throws ProductNotFoundException;
+    List<Product> getAll();
+    void delete() throws ProductNotFoundException;
     List<Product> getProductsByAvailability(boolean isAvailable);
     List<Product> getProductsByCategory(String category);
     Product getProductById(int id) throws ProductNotFoundException;
